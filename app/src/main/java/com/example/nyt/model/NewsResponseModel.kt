@@ -10,7 +10,6 @@ data class NewsResponseModel(
     @SerializedName("results")
     val results: List<Results>?
 ) {
-
     data class Results(
         @SerializedName("title")
         val title: String?,
