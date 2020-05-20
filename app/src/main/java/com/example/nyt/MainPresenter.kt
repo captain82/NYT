@@ -27,7 +27,7 @@ class MainPresenter : MviBasePresenter<MainView, MainViewState>() {
             }
             .map { NewsActionState.DataState(it) as NewsActionState }
             .onErrorReturn { NewsActionState.ErrorState(it) }
-            .doOnNext { Log.i("onNext", "Clicked") }
+            .startWith(NewsActionState.LoadingState)
             .doOnError { Log.i("onError", "Clicked") }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
@@ -45,19 +45,17 @@ class MainPresenter : MviBasePresenter<MainView, MainViewState>() {
         previousState: MainViewState,
         currentState: NewsActionState
     ): MainViewState {
-        val newState = previousState
 
-        when (currentState) {
+        return when (currentState) {
             is NewsActionState.LoadingState -> {
-                newState.isPageLoading = true
+                previousState.copy(isPageLoading = true)
             }
             is NewsActionState.DataState -> {
-                newState.newsObject = currentState.newsResponse
+                previousState.copy(isPageLoading = false,newsObject = currentState.newsResponse)
             }
-            is NewsActionState.ErrorState -> newState.error = currentState.throwable
-            is NewsActionState.FinishState -> newState.finished = true
+            is NewsActionState.ErrorState -> previousState.copy(isPageLoading = false,error = currentState.throwable)
+            is NewsActionState.FinishState ->previousState.copy(isPageLoading = false,finished = true)
         }
 
-        return newState
     }
 }

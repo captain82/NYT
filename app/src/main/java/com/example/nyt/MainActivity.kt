@@ -36,14 +36,19 @@ class MainActivity : MviActivity<MainView, MainPresenter>(), MainView {
     }
 
     override fun render(viewState: MainViewState) {
-        if (viewState.isPageLoading) {
-            Log.i("viewState", "Loading")
-        } else if (viewState.isPullToRefresh) {
-            Log.i("viewState", "isPullToRefresh")
-        } else if (viewState.finished!!) {
-            Log.i("viewState", viewState.newsObject.toString())
-        }else if(viewState.newsObject!=null){
-            Log.i("viewState", viewState.newsObject.toString())
+        when {
+            viewState.isPageLoading==true -> {
+                Log.i("viewState", "Loading")
+            }
+            viewState.isPullToRefresh!! -> {
+                Log.i("viewState", "isPullToRefresh")
+            }
+            viewState.finished!! -> {
+                Log.i("viewStateFinished", viewState.newsObject.toString())
+            }
+            viewState.newsObject!=null -> {
+                Log.i("viewStateObject", viewState.newsObject.toString())
+            }
         }
     }
 }
