@@ -3,22 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/actionScience"
-        android:icon="@drawable/ic_science"
-        android:title="Science"
+        android:icon="@drawable/ic_tech"
+        android:title="Tech"
         />
     <item
         android:id="@+id/actionBuisseness"
-        android:icon="@drawable/ic_buissenss"
-        android:title="Buissenss"
+        android:icon="@drawable/work_icon"
+        android:title="Buiseness"
         />
     <item
         android:id="@+id/actionMovies"
-        android:icon="@drawable/ic_movies"
+        android:icon="@drawable/movies_icon"
         android:title="Movies"
         />
     <item
         android:id="@+id/actionWorld"
-        android:icon="@drawable/ic_world"
+        android:icon="@drawable/earth_icon"
         android:title="World"
         />
 </menu>

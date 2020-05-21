@@ -6,23 +6,39 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <ImageView
+        android:id="@+id/iconNYT"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/ic_nytimes"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/topSeparator"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <View
+        android:id="@+id/topSeparator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:layout_constraintTop_toBottomOf="@id/iconNYT"
+        android:background="@color/darker_gray"/>
+
     <FrameLayout
         android:id="@+id/frameContainer"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iconNYT"
         app:layout_constraintBottom_toTopOf="@id/bottomNaviationView"
         android:layout_above="@id/bottomNaviationView"
         />
-
-
-
     <View
         android:layout_width="match_parent"
-        android:layout_height="4dp"
+        android:layout_height="1dp"
         app:layout_constraintBottom_toTopOf="@id/bottomNaviationView"
         android:layout_above="@id/bottomNaviationView"
-        android:background="@drawable/shadow"/>
+        android:background="@color/darker_gray"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNaviationView"
@@ -32,6 +48,7 @@
         app:elevation="8dp"
         android:elevation="10dp"
         app:labelVisibilityMode="unlabeled"
+        app:itemIconTint="@drawable/tab_color"
         android:layout_alignParentBottom="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:itemTextColor="@android:color/black"

@@ -85,13 +85,8 @@ class ScienceFragment : MviFragment<MainView, MainPresenter>(), MainView {
                 intent.putExtra("LINK" , newsItem.webUrl)
                 intent.putExtra("AUTHOR" , newsItem.author)
                 startActivity(intent)
-
-
             })
         }
-
         groupAdpater.add(section)
     }
-
-
 }

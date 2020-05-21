@@ -33,6 +33,9 @@ class MainActivity : AppCompatActivity(){
         Stetho.initializeWithDefaults(this)
 
         //showDetailNewsIntent()
+        supportActionBar?.setTitle(null)
+
+        supportActionBar?.setBackgroundDrawable(getDrawable(R.drawable.ic_nytimes))
 
 
         bottomNaviationView.setOnNavigationItemSelectedListener { it ->
@@ -57,7 +60,6 @@ class MainActivity : AppCompatActivity(){
         }
 
         bottomNaviationView.selectedItemId = R.id.actionScience
-        bottomNaviationView.setItemIconTintList(null)
     }
 
     fun openFragment(fragment: Fragment) {
