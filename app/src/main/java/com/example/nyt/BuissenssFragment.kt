@@ -45,9 +45,7 @@ class BuissenssFragment : MviFragment<MainView, MainPresenter>(), MainView {
     override fun createPresenter(): MainPresenter = MainPresenter()
 
     override fun showDetailNewsIntent(): Observable<String> {
-
-        return RxView.clicks(button).map { click -> "business" }
-            .doOnNext { Log.i("Click", it.toString()) }
+        return Observable.just("business")
     }
 
     override fun showInChrome(): Observable<Int> {

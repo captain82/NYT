@@ -1,12 +1,17 @@
 package com.example.nyt.model
 
+import androidx.room.Entity
+import androidx.room.Ignore
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
+@Entity
 data class NewsResponseModel(
     @SerializedName("status")
     val status: String?,
+    @PrimaryKey
     @SerializedName("section")
-    val section: String?,
+    val section: String,
     @SerializedName("results")
     val results: List<Results>?
 ) {

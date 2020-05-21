@@ -46,8 +46,8 @@ class WorldFragment : MviFragment<MainView, MainPresenter>(), MainView {
 
     override fun showDetailNewsIntent(): Observable<String> {
 
-        return RxView.clicks(button).map { click -> "world" }
-            .doOnNext { Log.i("Click", it.toString()) }
+        return Observable.just("world")
+
     }
 
     override fun showInChrome(): Observable<Int> {

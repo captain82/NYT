@@ -1,6 +1,7 @@
 package com.example.nyt
 
 import android.util.Log
+import com.example.nyt.Local.AppDatabase
 import com.example.nyt.api.MainView
 import com.example.nyt.api.RetrofitBuilder
 import com.example.nyt.mvi.MainViewState
@@ -13,7 +14,6 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 class MainPresenter : MviBasePresenter<MainView, MainViewState>() {
-    private val compositeDisposable = CompositeDisposable()
 
     override fun bindIntents() {
 

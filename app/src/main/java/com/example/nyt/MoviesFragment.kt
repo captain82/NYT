@@ -46,8 +46,8 @@ class MoviesFragment : MviFragment<MainView, MainPresenter>(), MainView {
 
     override fun showDetailNewsIntent(): Observable<String> {
 
-        return RxView.clicks(button).map { click -> "movies" }
-            .doOnNext { Log.i("Click", it.toString()) }
+        return Observable.just("movies")
+
     }
 
     override fun showInChrome(): Observable<Int> {

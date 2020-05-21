@@ -13,21 +13,17 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(){
 
-    val techFrag = ScienceFragment()
+    val techFrag = TechFragment()
     val buisenessFrag = BuissenssFragment()
     val movieFrag = MoviesFragment()
     val worldFrag = WorldFragment()
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         Stetho.initializeWithDefaults(this)
-
-        //showDetailNewsIntent()
-
+        
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.statusBarColor = Color.TRANSPARENT
         }
@@ -36,23 +32,30 @@ class MainActivity : AppCompatActivity(){
             decor.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         }
 
-
         bottomNaviationView.setOnNavigationItemSelectedListener { it ->
             when (it.itemId) {
                 R.id.actionScience -> {
-                    openFragment(techFrag)
+                    if (supportFragmentManager.findFragmentById(R.id.frameContainer) !is TechFragment) {
+                        openFragment(techFrag)
+                    }
                     true
                 }
                 R.id.actionBuisseness -> {
-                    openFragment(buisenessFrag)
+                    if (supportFragmentManager.findFragmentById(R.id.frameContainer) !is BuissenssFragment) {
+                        openFragment(buisenessFrag)
+                    }
                     true
                 }
                 R.id.actionMovies -> {
-                    openFragment(movieFrag)
+                    if (supportFragmentManager.findFragmentById(R.id.frameContainer) !is MoviesFragment) {
+                        openFragment(movieFrag)
+                    }
                     true
                 }
                 else -> {
-                    openFragment(worldFrag)
+                    if (supportFragmentManager.findFragmentById(R.id.frameContainer) !is WorldFragment) {
+                        openFragment(worldFrag)
+                    }
                     true
                 }
             }
