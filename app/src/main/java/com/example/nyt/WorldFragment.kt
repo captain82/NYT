@@ -75,7 +75,9 @@ class WorldFragment : MviFragment<MainView, MainPresenter>(), MainView {
 
     private fun inflateData(newsObject: NewsResponseModel?) {
         newsObject?.results?.forEach { newsItem ->
-            section.add(NewsItem(newsItem))
+            section.add(NewsItem(newsItem){
+
+            })
         }
 
         groupAdpater.add(section)

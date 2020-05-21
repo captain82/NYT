@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DetailFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/detailsImageCardView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            app:cardCornerRadius="10dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/detailsImageView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY" />
+
+        </androidx.cardview.widget.CardView>
+
+
+        <TextView
+            android:id="@+id/titleTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:fontFamily="sans-serif-black"
+            android:textSize="21dp"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="Coronavirus leading to massive damages in Society and mind."
+            app:layout_constraintTop_toBottomOf="@id/detailsImageCardView"/>
+
+        <TextView
+            android:id="@+id/publishdateTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:fontFamily="sans-serif-medium"
+            android:textSize="12dp"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="21st january,2020"
+            app:layout_constraintTop_toBottomOf="@id/titleTextView"/>
+
+
+        <TextView
+            android:id="@+id/abstractTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:fontFamily="sans-serif"
+            android:textSize="15dp"
+            android:textColor="#333333"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="Infections in the northeast have led officials to sequester hundreds of thousands at home. “China doesn’t want to take any chances,” one expert said."
+            app:layout_constraintTop_toBottomOf="@id/publishdateTextView"/>
+
+        <TextView
+            android:id="@+id/linkTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:fontFamily="sans-serif-condensed-light"
+            android:textSize="12dp"
+            android:textStyle="italic"
+            android:autoLink="web"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="Link : https://www.nytimes.com/2020/05/21/world/asia/coronavirus-china-lockdown.html"
+            app:layout_constraintTop_toBottomOf="@id/abstractTextView"/>
+
+        <TextView
+            android:id="@+id/authorTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:fontFamily="sans-serif"
+            android:textSize="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="By Javier C. Hernández"
+            app:layout_constraintTop_toBottomOf="@id/linkTextView"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</FrameLayout>

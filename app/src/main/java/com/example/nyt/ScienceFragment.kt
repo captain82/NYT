@@ -1,27 +1,26 @@
 package com.example.nyt
 
-
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nyt.api.MainView
 import com.example.nyt.model.NewsResponseModel
+import com.example.nyt.mvi.DetailsActivity
 import com.example.nyt.mvi.MainViewState
-import com.hannesdorfmann.mosby3.mvi.MviDialogFragment
 import com.hannesdorfmann.mosby3.mvi.MviFragment
 import com.jakewharton.rxbinding2.view.RxView
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Section
 import com.xwray.groupie.ViewHolder
 import io.reactivex.Observable
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_science.*
-import kotlin.random.Random
 
 /**
  * A simple [Fragment] subclass.
@@ -77,7 +76,18 @@ class ScienceFragment : MviFragment<MainView, MainPresenter>(), MainView {
 
     private fun inflateData(newsObject: NewsResponseModel?) {
         newsObject?.results?.forEach { newsItem ->
-            section.add(NewsItem(newsItem))
+            section.add(NewsItem(newsItem){
+                val intent = Intent(activity,DetailsActivity::class.java)
+                intent.putExtra("IMAGE_URL" , newsItem.multimedia?.get(0)?.imageUrl)
+                intent.putExtra("TITLE" , newsItem.title)
+                intent.putExtra("DATE" , newsItem.publishDate)
+                intent.putExtra("ABSTRACT" , newsItem.abstract)
+                intent.putExtra("LINK" , newsItem.webUrl)
+                intent.putExtra("AUTHOR" , newsItem.author)
+                startActivity(intent)
+
+
+            })
         }
 
         groupAdpater.add(section)
