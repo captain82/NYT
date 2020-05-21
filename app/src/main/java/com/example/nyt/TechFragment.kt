@@ -30,8 +30,8 @@ import kotlinx.android.synthetic.main.fragment_science.*
  * A simple [Fragment] subclass.
  */
 class TechFragment : MviFragment<MainView, MainPresenter>(), MainView {
-    val section = Section()
-    val groupAdpater = GroupAdapter<ViewHolder>()
+    private val section = Section()
+    private val groupAdpater = GroupAdapter<ViewHolder>()
     private lateinit var localdb: AppDatabase
 
 
@@ -40,6 +40,7 @@ class TechFragment : MviFragment<MainView, MainPresenter>(), MainView {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        groupAdpater.add(section)
         return inflater.inflate(R.layout.fragment_science, container, false)
     }
 
@@ -47,6 +48,8 @@ class TechFragment : MviFragment<MainView, MainPresenter>(), MainView {
         super.onActivityCreated(savedInstanceState)
         localdb = context?.let { AppDatabase.getDatabase(it) }!!
         recyclerView.adapter = groupAdpater
+
+
         recyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
         localdb.responseDao().query("technology").subscribeOn(Schedulers.io())
@@ -104,6 +107,5 @@ class TechFragment : MviFragment<MainView, MainPresenter>(), MainView {
                 startActivity(intent)
             })
         }
-        groupAdpater.add(section)
     }
 }

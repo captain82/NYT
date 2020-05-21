@@ -11,19 +11,29 @@ import com.facebook.stetho.Stetho
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-class MainActivity : AppCompatActivity(){
+open class MainActivity : AppCompatActivity() {
 
-    val techFrag = TechFragment()
-    val buisenessFrag = BuissenssFragment()
-    val movieFrag = MoviesFragment()
-    val worldFrag = WorldFragment()
+    private val techFrag = TechFragment()
+    private var buisenessFrag = BuissenssFragment()
+    private val movieFrag = MoviesFragment()
+    private val worldFrag = WorldFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        supportFragmentManager.beginTransaction().add(R.id.frameContainer, worldFrag)
+            .hide(worldFrag).commit()
+        supportFragmentManager.beginTransaction().add(R.id.frameContainer, movieFrag)
+            .hide(movieFrag).commit()
+        supportFragmentManager.beginTransaction().add(R.id.frameContainer, buisenessFrag)
+            .hide(buisenessFrag).commit()
+        supportFragmentManager.beginTransaction().add(R.id.frameContainer, techFrag).commit()
+
+        var fragActive:Fragment = techFrag
+
         Stetho.initializeWithDefaults(this)
-        
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.statusBarColor = Color.TRANSPARENT
         }
@@ -35,27 +45,28 @@ class MainActivity : AppCompatActivity(){
         bottomNaviationView.setOnNavigationItemSelectedListener { it ->
             when (it.itemId) {
                 R.id.actionScience -> {
-                    if (supportFragmentManager.findFragmentById(R.id.frameContainer) !is TechFragment) {
-                        openFragment(techFrag)
-                    }
+                    supportFragmentManager.beginTransaction().hide(fragActive).show(techFrag)
+                        .commit()
+                    fragActive = techFrag
                     true
                 }
                 R.id.actionBuisseness -> {
-                    if (supportFragmentManager.findFragmentById(R.id.frameContainer) !is BuissenssFragment) {
-                        openFragment(buisenessFrag)
-                    }
+                    supportFragmentManager.beginTransaction().hide(fragActive).show(buisenessFrag)
+                        .commit()
+                    fragActive = buisenessFrag
                     true
                 }
                 R.id.actionMovies -> {
-                    if (supportFragmentManager.findFragmentById(R.id.frameContainer) !is MoviesFragment) {
-                        openFragment(movieFrag)
-                    }
+                    supportFragmentManager.beginTransaction().hide(fragActive).show(movieFrag)
+                        .commit()
+                    fragActive = movieFrag
                     true
                 }
                 else -> {
-                    if (supportFragmentManager.findFragmentById(R.id.frameContainer) !is WorldFragment) {
-                        openFragment(worldFrag)
-                    }
+                    supportFragmentManager.beginTransaction().hide(fragActive).show(worldFrag)
+                        .commit()
+                    fragActive = worldFrag
+
                     true
                 }
             }
@@ -71,8 +82,6 @@ class MainActivity : AppCompatActivity(){
         transaction.addToBackStack(null)
         transaction.commit()
     }
-
-
 
 
 }

@@ -39,6 +39,8 @@ class MoviesFragment : MviFragment<MainView, MainPresenter>(), MainView {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         recyclerView.adapter = groupAdpater
+        groupAdpater.add(section)
+
         recyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
     }
 
@@ -81,7 +83,6 @@ class MoviesFragment : MviFragment<MainView, MainPresenter>(), MainView {
             })
         }
 
-        groupAdpater.add(section)
     }
 
 
