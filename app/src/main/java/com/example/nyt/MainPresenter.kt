@@ -7,6 +7,7 @@ import com.example.nyt.mvi.MainViewState
 import com.example.nyt.mvi.NewsActionState
 import com.hannesdorfmann.mosby3.mvi.MviBasePresenter
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -17,17 +18,17 @@ class MainPresenter : MviBasePresenter<MainView, MainViewState>() {
     override fun bindIntents() {
 
         val getNewsResults: Observable<NewsActionState> = intent(MainView::showDetailNewsIntent)
-            .switchMap { it ->
-                Log.i("switch", it.toString())
+            .switchMap {
                 RetrofitBuilder.apiService.getTopNewsByCategory(
                     "science",
                     "IUlVCCal6Hvyto3wwp1nKjfIzWtizl4q"
-                ).subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
+                ).observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
             }
-            .map { NewsActionState.DataState(it) as NewsActionState }
-            .onErrorReturn { NewsActionState.ErrorState(it) }
+            .map{NewsActionState.DataState(it) as NewsActionState }
             .startWith(NewsActionState.LoadingState)
+            .onErrorReturn { NewsActionState.ErrorState(it) }
+            .doOnComplete{NewsActionState.FinishState}
             .doOnError { Log.i("onError", "Clicked") }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())

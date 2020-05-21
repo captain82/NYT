@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/actionScience"
+        android:icon="@drawable/ic_science"
+        android:title="Science"
+        />
+    <item
+        android:id="@+id/actionBuisseness"
+        android:icon="@drawable/ic_buissenss"
+        android:title="Buissenss"
+        />
+    <item
+        android:id="@+id/actionMovies"
+        android:icon="@drawable/ic_movies"
+        android:title="Movies"
+        />
+    <item
+        android:id="@+id/actionWorld"
+        android:icon="@drawable/ic_world"
+        android:title="World"
+        />
+</menu>
