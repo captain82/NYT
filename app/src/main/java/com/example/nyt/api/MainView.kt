@@ -6,7 +6,7 @@ import io.reactivex.Observable
 
 interface MainView:MvpView {
 
-    fun showDetailNewsIntent(): Observable<Int>
+    fun showDetailNewsIntent(): Observable<String>
 
     fun showInChrome():Observable<Int>
 

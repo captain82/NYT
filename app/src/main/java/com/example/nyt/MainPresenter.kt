@@ -20,7 +20,7 @@ class MainPresenter : MviBasePresenter<MainView, MainViewState>() {
         val getNewsResults: Observable<NewsActionState> = intent(MainView::showDetailNewsIntent)
             .switchMap {
                 RetrofitBuilder.apiService.getTopNewsByCategory(
-                    "science",
+                    it,
                     "IUlVCCal6Hvyto3wwp1nKjfIzWtizl4q"
                 ).observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
