@@ -1,6 +1,7 @@
 package com.example.nyt
 
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -9,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.nyt.Local.AppDatabase
 import com.example.nyt.api.MainView
 import com.example.nyt.model.NewsResponseModel
 import com.example.nyt.mvi.MainViewState
@@ -23,7 +25,7 @@ import kotlinx.android.synthetic.main.fragment_science.*
 /**
  * A simple [Fragment] subclass.
  */
-class WorldFragment : MviFragment<MainView, MainPresenter>(), MainView {
+class WorldFragment : Fragment() {
 
     val section = Section()
     val groupAdpater = GroupAdapter<ViewHolder>()
@@ -44,7 +46,7 @@ class WorldFragment : MviFragment<MainView, MainPresenter>(), MainView {
         recyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
     }
 
-    override fun createPresenter(): MainPresenter = MainPresenter()
+   /* override fun createPresenter(): MainPresenter = MainPresenter()
 
     override fun showDetailNewsIntent(): Observable<String> {
 
@@ -75,6 +77,10 @@ class WorldFragment : MviFragment<MainView, MainPresenter>(), MainView {
         }
     }
 
+    override fun queryRoom(): Observable<Context> {
+        return Observable.never()
+    }
+
     private fun inflateData(newsObject: NewsResponseModel?) {
         newsObject?.results?.forEach { newsItem ->
             section.add(NewsItem(newsItem){
@@ -83,6 +89,6 @@ class WorldFragment : MviFragment<MainView, MainPresenter>(), MainView {
         }
 
     }
-
+*/
 
 }

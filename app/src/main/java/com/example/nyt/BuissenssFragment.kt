@@ -1,6 +1,8 @@
 package com.example.nyt
 
 
+import android.app.Application
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -9,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.nyt.Local.AppDatabase
 import com.example.nyt.api.MainView
 import com.example.nyt.model.NewsResponseModel
 import com.example.nyt.mvi.MainViewState
@@ -23,7 +26,7 @@ import kotlinx.android.synthetic.main.fragment_science.*
 /**
  * A simple [Fragment] subclass.
  */
-class BuissenssFragment : MviFragment<MainView, MainPresenter>(), MainView {
+class BuissenssFragment : Fragment() {
 
     val section = Section()
     val groupAdpater = GroupAdapter<ViewHolder>()
@@ -44,7 +47,7 @@ class BuissenssFragment : MviFragment<MainView, MainPresenter>(), MainView {
         recyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
     }
 
-    override fun createPresenter(): MainPresenter = MainPresenter()
+    /*override fun createPresenter(): MainPresenter = MainPresenter()
 
     override fun showDetailNewsIntent(): Observable<String> {
         return Observable.just("business")
@@ -73,6 +76,11 @@ class BuissenssFragment : MviFragment<MainView, MainPresenter>(), MainView {
         }
     }
 
+    override fun queryRoom(): Observable<Context> {
+        return Observable.never()
+
+    }
+
     private fun inflateData(newsObject: NewsResponseModel?) {
         newsObject?.results?.forEach { newsItem ->
             section.add(NewsItem(newsItem){
@@ -80,7 +88,7 @@ class BuissenssFragment : MviFragment<MainView, MainPresenter>(), MainView {
             })
         }
 
-    }
+    }*/
 
 
 

@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nyt.Local.AppDatabase
@@ -16,7 +15,6 @@ import com.example.nyt.model.NewsResponseModel
 import com.example.nyt.mvi.DetailsActivity
 import com.example.nyt.mvi.MainViewState
 import com.hannesdorfmann.mosby3.mvi.MviFragment
-import com.jakewharton.rxbinding2.view.RxView
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Section
 import com.xwray.groupie.ViewHolder
@@ -32,7 +30,8 @@ import kotlinx.android.synthetic.main.fragment_science.*
 class TechFragment : MviFragment<MainView, MainPresenter>(), MainView {
     private val section = Section()
     private val groupAdpater = GroupAdapter<ViewHolder>()
-    private lateinit var localdb: AppDatabase
+    private val localdb by lazy { AppDatabase.getDatabase(context!!)  }
+    private var responseModel: NewsResponseModel? = null
 
 
     override fun onCreateView(
@@ -46,23 +45,24 @@ class TechFragment : MviFragment<MainView, MainPresenter>(), MainView {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        localdb = context?.let { AppDatabase.getDatabase(it) }!!
         recyclerView.adapter = groupAdpater
 
 
-        recyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
-        localdb.responseDao().query("technology").subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread()).subscribe { it ->
-                Log.i("Database", "Success")
-            }
+        recyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        getRoomData()
+        inflateData(responseModel)
     }
 
-    override fun createPresenter(): MainPresenter = MainPresenter()
+    override fun createPresenter(): MainPresenter = MainPresenter(localdb!!)
 
     override fun showDetailNewsIntent(): Observable<String> {
 
-        return Observable.just("technology")
+        return if (responseModel != null) Observable.never() else Observable.never()
+    }
+
+    override fun queryRoom(): Observable<String> {
+        return Observable.just("science")
     }
 
     override fun showInChrome(): Observable<Int> {
@@ -82,19 +82,35 @@ class TechFragment : MviFragment<MainView, MainPresenter>(), MainView {
                 Log.i("viewStateFinished", viewState.newsObject.toString())
             }
             viewState.newsObject != null -> {
-                inflateData(viewState.newsObject)
+                //inflateRoom(viewState.newsObject)
                 Log.i("viewStateObject", viewState.newsObject.toString())
             }
         }
     }
 
-    private fun inflateData(newsObject: NewsResponseModel?) {
+    private fun inflateRoom(newsObject: NewsResponseModel?) {
         newsObject?.let {
-            Completable.fromAction{localdb.responseDao().insert(it)}.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe ({
-                    Log.i("Locally" , "Saved")
-                },{t->Log.i("Locally" , t.localizedMessage)})
+            Completable.fromAction { localdb?.responseDao()?.insert(it) }.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe({
+                    getRoomData()
+                }, { t -> Log.i("Locally", t.localizedMessage) })
         }
+    }
+
+    private fun getRoomData() {
+        localdb?.responseDao()?.query("science")
+            ?.observeOn(AndroidSchedulers.mainThread())
+            ?.subscribeOn(Schedulers.io())
+            ?.subscribe({ t ->
+                responseModel = t
+                inflateData(t)
+            }, {
+                responseModel = null
+            })
+    }
+
+    private fun inflateData(newsObject: NewsResponseModel?) {
+
         newsObject?.results?.forEach { newsItem ->
             section.add(NewsItem(newsItem) {
                 val intent = Intent(activity, DetailsActivity::class.java)
