@@ -32,6 +32,8 @@ class DetailsActivity : AppCompatActivity() {
         val abstract = intent.getStringExtra("ABSTRACT")
         val link = intent.getStringExtra("LINK")
         val author = intent.getStringExtra("AUTHOR")
+        val section = intent.getStringExtra("SECTION")
+
 
         var spf = SimpleDateFormat("yyyy-MM-dd")
         val newDate: Date = spf.parse(date)
@@ -45,6 +47,14 @@ class DetailsActivity : AppCompatActivity() {
         abstractTextView.text = abstract
         linkTextView.text = "Link : ${link}"
         authorTextView.text = author
+
+        toolbarTitle.text = section
+
+        iconBack.setOnClickListener {
+            onBackPressed()
+        }
+
+
 
     }
 }

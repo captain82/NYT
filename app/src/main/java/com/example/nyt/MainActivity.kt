@@ -16,7 +16,7 @@ open class MainActivity : AppCompatActivity() {
     private val techFrag = TechFragment()
     private var buisenessFrag = BuissenssFragment()
     private val movieFrag = MoviesFragment()
-    private val worldFrag = WorldFragment()
+    private val worldFrag = ScienceFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

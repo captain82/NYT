@@ -11,7 +11,8 @@ class NewsItem(val newsItem: NewsResponseModel.Results,val itemClick:()->Unit) :
     override fun bind(viewHolder: ViewHolder, position: Int) {
         viewHolder.itemView.authorTextView.text = newsItem.author
         viewHolder.itemView.titleTextView.text = newsItem.title
-        Picasso.get().load(newsItem.multimedia?.get(3)?.imageUrl).into(viewHolder.itemView.imageView)
+        Picasso.get().load(newsItem.multimedia?.get(3)?.imageUrl)
+            .into(viewHolder.itemView.imageView)
 
         viewHolder.itemView.rootLayout.setOnClickListener {
             itemClick.invoke()

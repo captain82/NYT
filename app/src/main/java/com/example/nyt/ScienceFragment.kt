@@ -1,7 +1,6 @@
 package com.example.nyt
 
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -17,17 +16,16 @@ import com.example.nyt.model.NewsResponseModel
 import com.example.nyt.mvi.DetailsActivity
 import com.example.nyt.mvi.MainViewState
 import com.hannesdorfmann.mosby3.mvi.MviFragment
-import com.jakewharton.rxbinding2.view.RxView
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Section
 import com.xwray.groupie.ViewHolder
 import io.reactivex.Observable
-import kotlinx.android.synthetic.main.fragment_science.*
+import kotlinx.android.synthetic.main.fragment_tech.*
 
 /**
  * A simple [Fragment] subclass.
  */
-class WorldFragment : MviFragment<MainView, MainPresenter>(), MainView {
+class ScienceFragment : MviFragment<MainView, MainPresenter>(), MainView {
 
     private val section = Section()
     private val groupAdpater = GroupAdapter<ViewHolder>()
@@ -39,7 +37,7 @@ class WorldFragment : MviFragment<MainView, MainPresenter>(), MainView {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_world, container, false)
+        return inflater.inflate(R.layout.fragment_science, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -56,7 +54,7 @@ class WorldFragment : MviFragment<MainView, MainPresenter>(), MainView {
     }
 
     override fun queryRoom(): Observable<String> {
-        return Observable.just("World News")
+        return Observable.just("Science")
     }
 
     override fun render(viewState: MainViewState) {
@@ -72,24 +70,28 @@ class WorldFragment : MviFragment<MainView, MainPresenter>(), MainView {
 
             viewState.error -> {
                 //progressDialog.dismissDialog()
-
             }
         }
     }
 
     private fun inflateData(newsObject: NewsResponseModel?) {
+        Log.i("count", section.itemCount.toString())
 
-        newsObject?.results?.forEach { newsItem ->
-            section.add(NewsItem(newsItem) {
-                val intent = Intent(activity, DetailsActivity::class.java)
-                intent.putExtra("IMAGE_URL", newsItem.multimedia?.get(0)?.imageUrl)
-                intent.putExtra("TITLE", newsItem.title)
-                intent.putExtra("DATE", newsItem.publishDate)
-                intent.putExtra("ABSTRACT", newsItem.abstract)
-                intent.putExtra("LINK", newsItem.webUrl)
-                intent.putExtra("AUTHOR", newsItem.author)
-                startActivity(intent)
-            })
+        if (section.itemCount == 0) {
+            newsObject?.results?.forEach { newsItem ->
+                section.add(NewsItem(newsItem) {
+                    val intent = Intent(activity, DetailsActivity::class.java)
+                    intent.putExtra("IMAGE_URL", newsItem.multimedia?.get(0)?.imageUrl)
+                    intent.putExtra("TITLE", newsItem.title)
+                    intent.putExtra("DATE", newsItem.publishDate)
+                    intent.putExtra("ABSTRACT", newsItem.abstract)
+                    intent.putExtra("LINK", newsItem.webUrl)
+                    intent.putExtra("AUTHOR", newsItem.author)
+                    intent.putExtra("SECTION", newsObject.section)
+
+                    startActivity(intent)
+                })
+            }
         }
     }
 

@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nyt.Local.AppDatabase
@@ -20,7 +19,7 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Section
 import com.xwray.groupie.ViewHolder
 import io.reactivex.Observable
-import kotlinx.android.synthetic.main.fragment_science.*
+import kotlinx.android.synthetic.main.fragment_tech.*
 
 /**
  * A simple [Fragment] subclass.
@@ -40,7 +39,7 @@ class TechFragment : MviFragment<MainView, MainPresenter>(), MainView {
     ): View? {
         // Inflate the layout for this fragment
         groupAdpater.add(section)
-        return inflater.inflate(R.layout.fragment_science, container, false)
+        return inflater.inflate(R.layout.fragment_tech, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -82,18 +81,24 @@ class TechFragment : MviFragment<MainView, MainPresenter>(), MainView {
     }
 
     private fun inflateData(newsObject: NewsResponseModel?) {
+        Log.i("count", section.itemCount.toString())
 
-        newsObject?.results?.forEach { newsItem ->
-            section.add(NewsItem(newsItem) {
-                val intent = Intent(activity, DetailsActivity::class.java)
-                intent.putExtra("IMAGE_URL", newsItem.multimedia?.get(0)?.imageUrl)
-                intent.putExtra("TITLE", newsItem.title)
-                intent.putExtra("DATE", newsItem.publishDate)
-                intent.putExtra("ABSTRACT", newsItem.abstract)
-                intent.putExtra("LINK", newsItem.webUrl)
-                intent.putExtra("AUTHOR", newsItem.author)
-                startActivity(intent)
-            })
+
+        if (section.itemCount == 0) {
+            newsObject?.results?.forEach { newsItem ->
+                section.add(NewsItem(newsItem) {
+                    val intent = Intent(activity, DetailsActivity::class.java)
+                    intent.putExtra("IMAGE_URL", newsItem.multimedia?.get(0)?.imageUrl)
+                    intent.putExtra("TITLE", newsItem.title)
+                    intent.putExtra("DATE", newsItem.publishDate)
+                    intent.putExtra("ABSTRACT", newsItem.abstract)
+                    intent.putExtra("LINK", newsItem.webUrl)
+                    intent.putExtra("AUTHOR", newsItem.author)
+                    intent.putExtra("SECTION", newsObject.section)
+
+                    startActivity(intent)
+                })
+            }
         }
     }
 }

@@ -22,7 +22,7 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Section
 import com.xwray.groupie.ViewHolder
 import io.reactivex.Observable
-import kotlinx.android.synthetic.main.fragment_science.*
+import kotlinx.android.synthetic.main.fragment_tech.*
 
 /**
  * A simple [Fragment] subclass.
@@ -79,17 +79,21 @@ class MoviesFragment :  MviFragment<MainView, MainPresenter>(), MainView{
 
     private fun inflateData(newsObject: NewsResponseModel?) {
 
-        newsObject?.results?.forEach { newsItem ->
-            section.add(NewsItem(newsItem) {
-                val intent = Intent(activity, DetailsActivity::class.java)
-                intent.putExtra("IMAGE_URL", newsItem.multimedia?.get(0)?.imageUrl)
-                intent.putExtra("TITLE", newsItem.title)
-                intent.putExtra("DATE", newsItem.publishDate)
-                intent.putExtra("ABSTRACT", newsItem.abstract)
-                intent.putExtra("LINK", newsItem.webUrl)
-                intent.putExtra("AUTHOR", newsItem.author)
-                startActivity(intent)
-            })
+        if (section.itemCount == 0) {
+            newsObject?.results?.forEach { newsItem ->
+                section.add(NewsItem(newsItem) {
+                    val intent = Intent(activity, DetailsActivity::class.java)
+                    intent.putExtra("IMAGE_URL", newsItem.multimedia?.get(0)?.imageUrl)
+                    intent.putExtra("TITLE", newsItem.title)
+                    intent.putExtra("DATE", newsItem.publishDate)
+                    intent.putExtra("ABSTRACT", newsItem.abstract)
+                    intent.putExtra("LINK", newsItem.webUrl)
+                    intent.putExtra("AUTHOR", newsItem.author)
+                    intent.putExtra("SECTION",newsObject.section)
+
+                    startActivity(intent)
+                })
+            }
         }
     }
 
