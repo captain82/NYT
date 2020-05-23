@@ -60,6 +60,14 @@ class BuissenssFragment : MviFragment<MainView, MainPresenter>(), MainView {
         return Observable.just("Business")
     }
 
+    override fun updatedb(): Observable<String> {
+        return RxView.clicks(button).map { "Business" }
+    }
+
+    override fun checkLive(): Observable<String> {
+        return Observable.just("Business")
+    }
+
     override fun render(viewState: MainViewState) {
         when {
             viewState.isPageLoading -> {
@@ -82,7 +90,7 @@ class BuissenssFragment : MviFragment<MainView, MainPresenter>(), MainView {
 
         if (section.itemCount == 0) {
 
-            newsObject?.results?.forEach { newsItem ->
+            /*newsObject?.results?.forEach { newsItem ->
                 section.add(NewsItem(newsItem) {
                     val intent = Intent(activity, DetailsActivity::class.java)
                     intent.putExtra("IMAGE_URL", newsItem.multimedia?.get(0)?.imageUrl)
@@ -94,7 +102,7 @@ class BuissenssFragment : MviFragment<MainView, MainPresenter>(), MainView {
                     intent.putExtra("SECTION",newsObject.section)
                     startActivity(intent)
                 })
-            }
+            }*/
         }
     }
 }

@@ -15,4 +15,8 @@ interface MainView:MvpView {
 
     fun queryRoom(): Observable<String>
 
+    fun updatedb():Observable<String>
+
+    fun checkLive():Observable<String>
+
 }

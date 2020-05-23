@@ -15,6 +15,7 @@ import com.example.nyt.model.NewsResponseModel
 import com.example.nyt.mvi.DetailsActivity
 import com.example.nyt.mvi.MainViewState
 import com.hannesdorfmann.mosby3.mvi.MviFragment
+import com.jakewharton.rxbinding2.view.RxView
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Section
 import com.xwray.groupie.ViewHolder
@@ -31,7 +32,9 @@ class TechFragment : MviFragment<MainView, MainPresenter>(), MainView {
     private lateinit var presenter: MainPresenter
 
     private lateinit var progressDialog: ProgressDialog
+    private var shouldFetch: Boolean = false
 
+    lateinit var newsItem: NewsItem
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,6 +50,23 @@ class TechFragment : MviFragment<MainView, MainPresenter>(), MainView {
 
         //progressDialog = ProgressDialog(context!!, "Loading...")
 
+        swipeLayout.setOnRefreshListener {
+            presenter.fetchData("Technology")
+        }
+
+        newsItem = NewsItem {
+            val intent = Intent(activity, DetailsActivity::class.java)
+            intent.putExtra("IMAGE_URL", it.multimedia?.get(0)?.imageUrl)
+            intent.putExtra("TITLE", it.title)
+            intent.putExtra("DATE", it.publishDate)
+            intent.putExtra("ABSTRACT", it.abstract)
+            intent.putExtra("LINK", it.webUrl)
+            intent.putExtra("AUTHOR", it.author)
+            intent.putExtra("SECTION", "Technology")
+
+            startActivity(intent)
+        }
+
 
         recyclerView.adapter = groupAdpater
         recyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
@@ -59,16 +79,31 @@ class TechFragment : MviFragment<MainView, MainPresenter>(), MainView {
     }
 
     override fun queryRoom(): Observable<String> {
+        swipeLayout.isRefreshing = true
+
+        return Observable.just("Technology")
+        //return Observable.just("Technology")
+    }
+
+    override fun updatedb(): Observable<String> {
+        return Observable.just("Technology")
+    }
+
+    override fun checkLive(): Observable<String> {
         return Observable.just("Technology")
     }
 
     override fun render(viewState: MainViewState) {
         when {
+            viewState.updateDb -> {
+                Log.i("UPDATE", "DB")
+            }
             viewState.isPageLoading -> {
                 //progressDialog.showDialog()
             }
 
             viewState.newsObject != null -> {
+                swipeLayout.isRefreshing = false
                 inflateData(viewState.newsObject)
                 ////progressDialog.dismissDialog()
             }
@@ -77,27 +112,25 @@ class TechFragment : MviFragment<MainView, MainPresenter>(), MainView {
                 //progressDialog.dismissDialog()
 
             }
+
         }
     }
+
 
     private fun inflateData(newsObject: NewsResponseModel?) {
         Log.i("count", section.itemCount.toString())
 
-
         if (section.itemCount == 0) {
             newsObject?.results?.forEach { newsItem ->
-                section.add(NewsItem(newsItem) {
-                    val intent = Intent(activity, DetailsActivity::class.java)
-                    intent.putExtra("IMAGE_URL", newsItem.multimedia?.get(0)?.imageUrl)
-                    intent.putExtra("TITLE", newsItem.title)
-                    intent.putExtra("DATE", newsItem.publishDate)
-                    intent.putExtra("ABSTRACT", newsItem.abstract)
-                    intent.putExtra("LINK", newsItem.webUrl)
-                    intent.putExtra("AUTHOR", newsItem.author)
-                    intent.putExtra("SECTION", newsObject.section)
+                section.add(this.newsItem)
+                this.newsItem.bindData(newsItem)
+                this.newsItem.notifyChanged()
 
-                    startActivity(intent)
-                })
+            }
+        } else {
+            newsObject?.results?.forEach {
+                this.newsItem.bindData(it)
+                this.newsItem.notifyChanged()
             }
         }
     }
