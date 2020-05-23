@@ -11,11 +11,8 @@ import io.reactivex.Observable
 
 interface MainView:MvpView {
 
-    fun showDetailNewsIntent(): Observable<String>
-
-    fun showInChrome():Observable<Int>
-
     fun render(viewState: MainViewState)
 
     fun queryRoom(): Observable<String>
+
 }

@@ -25,6 +25,8 @@
         app:layout_constraintTop_toBottomOf="@id/iconNYT"
         android:background="@color/darker_gray"/>
 
+
+
     <FrameLayout
         android:id="@+id/frameContainer"
         android:layout_width="match_parent"
