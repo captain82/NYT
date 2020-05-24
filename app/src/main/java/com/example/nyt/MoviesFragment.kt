@@ -19,9 +19,6 @@ import com.example.nyt.mvi.MainViewState
 import com.hannesdorfmann.mosby3.mvi.MviFragment
 import com.jakewharton.rxbinding2.support.v4.widget.RxSwipeRefreshLayout
 import com.jakewharton.rxbinding2.view.RxView
-import com.xwray.groupie.GroupAdapter
-import com.xwray.groupie.Section
-import com.xwray.groupie.ViewHolder
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_tech.*
 

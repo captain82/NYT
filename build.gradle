@@ -10,6 +10,9 @@ ext {
     rxJava = '2.2.5'
     rxAndroid = '2.1.0'
     mosbyMvi = '3.1.1'
+    rxBinding = '2.1.1'
+    rxBindingSupport = '2.1.0'
+    picasso = '2.71828'
 }
 
 
@@ -18,7 +21,7 @@ buildscript {
     repositories {
         google()
         jcenter()
-        
+
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.3'
@@ -32,7 +35,7 @@ allprojects {
     repositories {
         google()
         jcenter()
-        
+
     }
 }
 

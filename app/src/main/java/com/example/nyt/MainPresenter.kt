@@ -8,7 +8,6 @@ import com.example.nyt.model.NewsResponseModel
 import com.example.nyt.mvi.MainViewState
 import com.example.nyt.mvi.NewsActionState
 import com.hannesdorfmann.mosby3.mvi.MviBasePresenter
-import com.xwray.groupie.Section
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
