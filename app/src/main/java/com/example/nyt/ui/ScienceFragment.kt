@@ -48,7 +48,7 @@ class ScienceFragment : MviFragment<MainView, MainPresenter>(), MainView {
             intent.putExtra("ABSTRACT", it.abstract)
             intent.putExtra("LINK", it.webUrl)
             intent.putExtra("AUTHOR", it.author)
-            intent.putExtra("SECTION", "Technology")
+            intent.putExtra("SECTION", "Science")
             startActivity(intent)
         }
 
