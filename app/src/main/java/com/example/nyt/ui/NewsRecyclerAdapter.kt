@@ -41,7 +41,7 @@ class NewsRecyclerAdapter(private val itemClick: (NewsResponseModel.Results) -> 
         newsList.let { response ->
             viewHolder.itemView.authorTextView.text = response?.results?.get(position)?.author
             viewHolder.itemView.titleTextView.text = response?.results?.get(position)?.title
-            Picasso.get().load(response?.results?.get(position)?.multimedia?.get(3)?.imageUrl)
+            Picasso.get().load(response?.results?.get(position)?.multimedia?.find { it.format == "mediumThreeByTwo210" }?.imageUrl)
                 .into(viewHolder.itemView.imageView)
             viewHolder.itemView.rootLayout.setOnClickListener {
                 response?.results?.get(position)?.let { it1 -> itemClick.invoke(it1) }

@@ -42,7 +42,7 @@ class MoviesFragment : MviFragment<MainView, MainPresenter>(), MainView {
 
         recyclerAdapter = NewsRecyclerAdapter {
             val intent = Intent(activity, DetailsActivity::class.java)
-            intent.putExtra("IMAGE_URL", it.multimedia?.get(0)?.imageUrl)
+            intent.putExtra("IMAGE_URL", it.multimedia?.find { it.format=="superJumbo" }?.imageUrl)
             intent.putExtra("TITLE", it.title)
             intent.putExtra("DATE", it.publishDate)
             intent.putExtra("ABSTRACT", it.abstract)
