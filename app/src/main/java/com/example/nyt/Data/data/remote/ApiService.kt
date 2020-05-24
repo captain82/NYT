@@ -1,4 +1,4 @@
-package com.example.nyt.api
+package com.example.nyt.Data.data.remote
 
 import com.example.nyt.model.NewsResponseModel
 import io.reactivex.Observable

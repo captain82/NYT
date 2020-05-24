@@ -1,4 +1,4 @@
-package com.example.nyt.Local
+package com.example.nyt.Data.data.local
 
 import android.content.Context
 import androidx.room.*

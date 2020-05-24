@@ -1,4 +1,4 @@
-package com.example.nyt
+package com.example.nyt.ui
 
 import android.graphics.Color
 import android.os.Build
@@ -7,6 +7,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import com.example.nyt.R
 import com.facebook.stetho.Stetho
 import kotlinx.android.synthetic.main.activity_main.*
 

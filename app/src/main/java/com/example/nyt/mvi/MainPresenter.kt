@@ -1,12 +1,11 @@
-package com.example.nyt
+package com.example.nyt.mvi
 
 import android.util.Log
-import com.example.nyt.Local.AppDatabase
-import com.example.nyt.api.MainView
-import com.example.nyt.api.RetrofitBuilder
+import com.example.nyt.Data.data.local.AppDatabase
+import com.example.nyt.Data.data.remote.RetrofitBuilder
 import com.example.nyt.model.NewsResponseModel
-import com.example.nyt.mvi.MainViewState
-import com.example.nyt.mvi.NewsActionState
+import com.example.nyt.model.MainViewState
+import com.example.nyt.model.NewsActionState
 import com.hannesdorfmann.mosby3.mvi.MviBasePresenter
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -79,7 +78,8 @@ class MainPresenter(private var localdb: AppDatabase) :
 
         val finalObservable = Observable.merge(refreshData, checkLive)
 
-        val initialState = MainViewState(isPageLoading = true)
+        val initialState =
+            MainViewState(isPageLoading = true)
 
         finalObservable.scan(initialState, this::viewStateReducer)?.let {
             subscribeViewState(it, MainView::render)

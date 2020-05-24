@@ -1,4 +1,4 @@
-package com.example.nyt
+package com.example.nyt.ui
 
 import android.app.Application
 import com.facebook.stetho.Stetho

@@ -1,4 +1,4 @@
-package com.example.nyt.api
+package com.example.nyt.Data.data.remote
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

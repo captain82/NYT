@@ -1,11 +1,9 @@
-package com.example.nyt.Local
+package com.example.nyt.Data.data.local
 
 import androidx.room.*
 import com.example.nyt.model.NewsResponseModel
-import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.internal.operators.single.SingleToObservable
 
 @Dao
 interface ResponseDAO {

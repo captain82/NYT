@@ -1,9 +1,10 @@
-package com.example.nyt
+package com.example.nyt.ui
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.nyt.R
 import com.example.nyt.model.NewsResponseModel
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.news_recycler_item.view.*

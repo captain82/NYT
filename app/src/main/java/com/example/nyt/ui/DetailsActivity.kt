@@ -1,4 +1,4 @@
-package com.example.nyt.mvi
+package com.example.nyt.ui
 
 import android.graphics.Color
 import android.os.Build
@@ -41,7 +41,9 @@ class DetailsActivity : AppCompatActivity() {
         date = spf.format(newDate)
         println(date)
 
-        Picasso.get().load(imageUrl).into(detailsImageView)
+        Picasso.get().load(imageUrl)
+            .placeholder(R.drawable.ic_nytimes)
+            .into(detailsImageView)
         titleTextView.text = title
         publishdateTextView.text = date
         abstractTextView.text = abstract

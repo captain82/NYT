@@ -1,19 +1,17 @@
-package com.example.nyt
+package com.example.nyt.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.nyt.Local.AppDatabase
-import com.example.nyt.api.MainView
+import com.example.nyt.Data.data.local.AppDatabase
+import com.example.nyt.R
+import com.example.nyt.mvi.MainView
 import com.example.nyt.model.NewsResponseModel
-import com.example.nyt.mvi.DetailsActivity
-import com.example.nyt.mvi.MainViewState
+import com.example.nyt.model.MainViewState
+import com.example.nyt.mvi.MainPresenter
 import com.hannesdorfmann.mosby3.mvi.MviFragment
 import com.jakewharton.rxbinding2.support.v4.widget.RxSwipeRefreshLayout
 
@@ -24,7 +22,8 @@ import kotlinx.android.synthetic.main.fragment_tech.*
 /**
  * A simple [Fragment] subclass.
  */
-class TechFragment : MviFragment<MainView, MainPresenter>(), MainView {
+class TechFragment : MviFragment<MainView, MainPresenter>(),
+    MainView {
     private val localdb by lazy { AppDatabase.getDatabase(context!!) }
     private lateinit var presenter: MainPresenter
     private lateinit var adapter: NewsRecyclerAdapter

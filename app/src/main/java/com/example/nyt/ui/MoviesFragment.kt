@@ -1,42 +1,42 @@
-package com.example.nyt
+package com.example.nyt.ui
 
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.nyt.Local.AppDatabase
-import com.example.nyt.api.MainView
+import com.example.nyt.Data.data.local.AppDatabase
+import com.example.nyt.R
+import com.example.nyt.mvi.MainView
 import com.example.nyt.model.NewsResponseModel
-import com.example.nyt.mvi.DetailsActivity
-import com.example.nyt.mvi.MainViewState
+import com.example.nyt.model.MainViewState
+import com.example.nyt.mvi.MainPresenter
 import com.hannesdorfmann.mosby3.mvi.MviFragment
 import com.jakewharton.rxbinding2.support.v4.widget.RxSwipeRefreshLayout
-import com.jakewharton.rxbinding2.view.RxView
-
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_tech.*
 
 /**
  * A simple [Fragment] subclass.
  */
-class ScienceFragment : MviFragment<MainView, MainPresenter>(), MainView {
-    private val localdb by lazy { AppDatabase.getDatabase(context!!) }
-    private lateinit var presenter: MainPresenter
+class MoviesFragment :  MviFragment<MainView, MainPresenter>(),
+    MainView {
+
     private lateinit var adapter: NewsRecyclerAdapter
 
+    private val localdb by lazy { AppDatabase.getDatabase(context!!) }
+    private lateinit var presenter: MainPresenter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_science, container, false)
+        return inflater.inflate(R.layout.fragment_movies, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -64,13 +64,12 @@ class ScienceFragment : MviFragment<MainView, MainPresenter>(), MainView {
     }
 
     override fun checkLive(): Observable<String> {
-        return Observable.just("Science")
+        return Observable.just("Movies")
     }
 
     override fun refreshData(): Observable<String> {
         return RxSwipeRefreshLayout.refreshes(swipeLayout)
-            .map {"Science" }}
-
+            .map { "Movies" }    }
 
     override fun render(viewState: MainViewState) {
         when {
@@ -89,11 +88,15 @@ class ScienceFragment : MviFragment<MainView, MainPresenter>(), MainView {
             viewState.error -> {
                 swipeLayout.isRefreshing = false
             }
+
         }
     }
 
     private fun inflateData(newsObject: NewsResponseModel?) {
+
         newsObject?.let { adapter.bindData(it) }
+
     }
+
 
 }
