@@ -37,12 +37,11 @@ class DetailsActivity : AppCompatActivity() {
 
         var spf = SimpleDateFormat("yyyy-MM-dd")
         val newDate: Date = spf.parse(date)
-        spf = SimpleDateFormat("dd-MMM-yyyy")
+        spf = SimpleDateFormat("dd MMM yyyy")
         date = spf.format(newDate)
         println(date)
 
         Picasso.get().load(imageUrl)
-            .placeholder(R.drawable.ic_nytimes)
             .into(detailsImageView)
         titleTextView.text = title
         publishdateTextView.text = date
