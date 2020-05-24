@@ -12,6 +12,8 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
+const val API_KEY: String = "IUlVCCal6Hvyto3wwp1nKjfIzWtizl4q"
+
 class MainPresenter(private var localdb: AppDatabase) :
     MviBasePresenter<MainView, MainViewState>() {
 
@@ -46,7 +48,7 @@ class MainPresenter(private var localdb: AppDatabase) :
         val refreshData = intent(MainView::refreshData)
             .flatMap {
                 RetrofitBuilder.apiService
-                    .getTopNewsByCategory(it, "IUlVCCal6Hvyto3wwp1nKjfIzWtizl4q")
+                    .getTopNewsByCategory(it, API_KEY)
                     .onErrorReturn {
                         defaultResponseModel
                     }
@@ -77,7 +79,7 @@ class MainPresenter(private var localdb: AppDatabase) :
 
     private fun fetchDataFromNetwork(section: String) {
         RetrofitBuilder.apiService
-            .getTopNewsByCategory(section, "IUlVCCal6Hvyto3wwp1nKjfIzWtizl4q")
+            .getTopNewsByCategory(section, API_KEY)
             .doOnError { Log.i("error", "occured") }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
