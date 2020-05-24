@@ -9,24 +9,16 @@ import retrofit2.converter.gson.GsonConverterFactory
 object RetrofitBuilder {
 
     const val BASE_URL: String = "https://api.nytimes.com/svc/topstories/"
-
-    val interceptor = HttpLoggingInterceptor()
-
-    val client = OkHttpClient.Builder().addInterceptor(interceptor)
-
-    val retrofitBuilder: Retrofit.Builder by lazy {
+    private val interceptor = HttpLoggingInterceptor()
+    private val client = OkHttpClient.Builder().addInterceptor(interceptor)
+    private val retrofitBuilder: Retrofit.Builder by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .client(client.build())
             .addConverterFactory(GsonConverterFactory.create())
     }
-
     val apiService: ApiService by lazy {
         retrofitBuilder.build().create(ApiService::class.java)
     }
-
-
-
-
 }

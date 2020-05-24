@@ -16,14 +16,10 @@ class MainPresenter(private var localdb: AppDatabase) :
     MviBasePresenter<MainView, MainViewState>() {
 
     lateinit var section: String
-
-    val defaultResponseModel = NewsResponseModel("FAILED" , "", listOf())
+    private val defaultResponseModel = NewsResponseModel("FAILED", "", listOf())
 
     override fun bindIntents() {
-
-
-
-        val checkLive = intent(MainView::checkLive)
+        val queryRoom = intent(MainView::queryRoom)
             .switchMap { section ->
                 this.section = section
                 localdb.responseDao().query(section)
@@ -40,13 +36,12 @@ class MainPresenter(private var localdb: AppDatabase) :
                     NewsActionState.DataState(it[0]) as NewsActionState
                 } else {
                     Log.i("update", "db")
-                    fetchData(section)
+                    fetchDataFromNetwork(section)
                     NewsActionState.UpdateDb
                 }
             }.doOnError { Log.i("error", "liveQuery") }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-
 
         val refreshData = intent(MainView::refreshData)
             .flatMap {
@@ -60,33 +55,27 @@ class MainPresenter(private var localdb: AppDatabase) :
                     .subscribeOn(Schedulers.io())
             }
             .map {
-                Log.i("refresh", "success")
-                if (it.status=="OK"){
+                if (it.status == "OK") {
                     inflateDataInRoom(it)
                     NewsActionState.UpdateDb as NewsActionState
-                }else{
+                } else {
                     NewsActionState.ErrorState(Throwable(Exception().localizedMessage))
                 }
-
             }
             .onErrorReturn { t ->
-                Log.i("refresh", t.localizedMessage)
                 NewsActionState.ErrorState(t)
             }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
 
-        val finalObservable = Observable.merge(refreshData, checkLive)
-
-        val initialState =
-            MainViewState(isPageLoading = true)
-
+        val finalObservable = Observable.merge(refreshData, queryRoom)
+        val initialState = MainViewState(isPageLoading = true)
         finalObservable.scan(initialState, this::viewStateReducer)?.let {
             subscribeViewState(it, MainView::render)
         }
     }
 
-    fun fetchData(section: String) {
+    private fun fetchDataFromNetwork(section: String) {
         RetrofitBuilder.apiService
             .getTopNewsByCategory(section, "IUlVCCal6Hvyto3wwp1nKjfIzWtizl4q")
             .doOnError { Log.i("error", "occured") }
@@ -104,12 +93,10 @@ class MainPresenter(private var localdb: AppDatabase) :
             .observeOn(AndroidSchedulers.mainThread()).subscribe()
     }
 
-
     private fun viewStateReducer(
         previousState: MainViewState,
         currentState: NewsActionState
     ): MainViewState {
-
         return when (currentState) {
             is NewsActionState.LoadingState -> {
                 previousState.copy(isPageLoading = true)
@@ -131,7 +118,5 @@ class MainPresenter(private var localdb: AppDatabase) :
                 previousState.copy(updateDb = true)
             }
         }
-
     }
-
 }

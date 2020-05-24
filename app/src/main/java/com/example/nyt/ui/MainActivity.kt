@@ -15,20 +15,20 @@ import kotlinx.android.synthetic.main.activity_main.*
 open class MainActivity : AppCompatActivity() {
 
     private val techFrag = TechFragment()
-    private var buisenessFrag = BuissenssFragment()
+    private var businessFrag = BuissenssFragment()
     private val movieFrag = MoviesFragment()
-    private val worldFrag = ScienceFragment()
+    private val scienceFrag = ScienceFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        supportFragmentManager.beginTransaction().add(R.id.frameContainer, worldFrag)
-            .hide(worldFrag).commit()
+        supportFragmentManager.beginTransaction().add(R.id.frameContainer, scienceFrag)
+            .hide(scienceFrag).commit()
         supportFragmentManager.beginTransaction().add(R.id.frameContainer, movieFrag)
             .hide(movieFrag).commit()
-        supportFragmentManager.beginTransaction().add(R.id.frameContainer, buisenessFrag)
-            .hide(buisenessFrag).commit()
+        supportFragmentManager.beginTransaction().add(R.id.frameContainer, businessFrag)
+            .hide(businessFrag).commit()
         supportFragmentManager.beginTransaction().add(R.id.frameContainer, techFrag).commit()
 
         var fragActive:Fragment = techFrag
@@ -52,9 +52,9 @@ open class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.actionBuisseness -> {
-                    supportFragmentManager.beginTransaction().hide(fragActive).show(buisenessFrag)
+                    supportFragmentManager.beginTransaction().hide(fragActive).show(businessFrag)
                         .commit()
-                    fragActive = buisenessFrag
+                    fragActive = businessFrag
                     true
                 }
                 R.id.actionMovies -> {
@@ -64,25 +64,12 @@ open class MainActivity : AppCompatActivity() {
                     true
                 }
                 else -> {
-                    supportFragmentManager.beginTransaction().hide(fragActive).show(worldFrag)
+                    supportFragmentManager.beginTransaction().hide(fragActive).show(scienceFrag)
                         .commit()
-                    fragActive = worldFrag
-
+                    fragActive = scienceFrag
                     true
-                }
-            }
+                }}
         }
-
         bottomNaviationView.selectedItemId = R.id.actionScience
     }
-
-    fun openFragment(fragment: Fragment) {
-        val manager = supportFragmentManager
-        val transaction: FragmentTransaction = manager.beginTransaction()
-        transaction.replace(R.id.frameContainer, fragment)
-        transaction.addToBackStack(null)
-        transaction.commit()
-    }
-
-
 }

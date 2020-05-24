@@ -5,11 +5,7 @@ import com.hannesdorfmann.mosby3.mvp.MvpView
 import io.reactivex.Observable
 
 interface MainView:MvpView {
-
     fun render(viewState: MainViewState)
-
-    fun checkLive():Observable<String>
-
+    fun queryRoom():Observable<String>
     fun refreshData():Observable<String>
-
 }

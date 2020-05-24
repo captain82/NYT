@@ -22,12 +22,10 @@ import kotlinx.android.synthetic.main.fragment_tech.*
 /**
  * A simple [Fragment] subclass.
  */
-class TechFragment : MviFragment<MainView, MainPresenter>(),
-    MainView {
+class TechFragment : MviFragment<MainView, MainPresenter>(), MainView {
     private val localdb by lazy { AppDatabase.getDatabase(context!!) }
     private lateinit var presenter: MainPresenter
-    private lateinit var adapter: NewsRecyclerAdapter
-
+    private lateinit var recyclerAdapter: NewsRecyclerAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,8 +37,7 @@ class TechFragment : MviFragment<MainView, MainPresenter>(),
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        adapter = NewsRecyclerAdapter {
+        recyclerAdapter = NewsRecyclerAdapter {
             val intent = Intent(activity, DetailsActivity::class.java)
             intent.putExtra("IMAGE_URL", it.multimedia?.get(0)?.imageUrl)
             intent.putExtra("TITLE", it.title)
@@ -51,9 +48,7 @@ class TechFragment : MviFragment<MainView, MainPresenter>(),
             intent.putExtra("SECTION", "Technology")
             startActivity(intent)
         }
-
-        recyclerView.adapter = adapter
-
+        recyclerView.adapter = recyclerAdapter
     }
 
     override fun createPresenter(): MainPresenter {
@@ -66,7 +61,7 @@ class TechFragment : MviFragment<MainView, MainPresenter>(),
             .map { "Technology" }
     }
 
-    override fun checkLive(): Observable<String> {
+    override fun queryRoom(): Observable<String> {
         return Observable.just("Technology")
     }
 
@@ -78,20 +73,16 @@ class TechFragment : MviFragment<MainView, MainPresenter>(),
             viewState.isPageLoading -> {
                 swipeLayout.isRefreshing = true
             }
-
             viewState.newsObject != null -> {
                 swipeLayout.isRefreshing = false
                 inflateData(viewState.newsObject)
             }
-
             viewState.error -> {
                 swipeLayout.isRefreshing = false
-            }
-        }
+            }}
     }
 
     private fun inflateData(newsObject: NewsResponseModel?) {
-        newsObject?.let { adapter.bindData(it) }
+        newsObject?.let { recyclerAdapter.bindData(it) }
     }
-
 }

@@ -23,11 +23,9 @@ import kotlinx.android.synthetic.main.fragment_tech.*
 /**
  * A simple [Fragment] subclass.
  */
-class BuissenssFragment : MviFragment<MainView, MainPresenter>(),
-    MainView {
+class BuissenssFragment : MviFragment<MainView, MainPresenter>(), MainView {
 
-    private lateinit var adapter: NewsRecyclerAdapter
-
+    private lateinit var recyclerAdapter: NewsRecyclerAdapter
     private val localdb by lazy { AppDatabase.getDatabase(context!!) }
     private lateinit var presenter: MainPresenter
 
@@ -42,9 +40,8 @@ class BuissenssFragment : MviFragment<MainView, MainPresenter>(),
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        adapter = NewsRecyclerAdapter {
-            val intent =
-                Intent(activity, DetailsActivity::class.java)
+        recyclerAdapter = NewsRecyclerAdapter {
+            val intent = Intent(activity, DetailsActivity::class.java)
             intent.putExtra("IMAGE_URL", it.multimedia?.get(0)?.imageUrl)
             intent.putExtra("TITLE", it.title)
             intent.putExtra("DATE", it.publishDate)
@@ -55,7 +52,7 @@ class BuissenssFragment : MviFragment<MainView, MainPresenter>(),
             startActivity(intent)
         }
 
-        recyclerView.adapter = adapter
+        recyclerView.adapter = recyclerAdapter
         recyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
     }
 
@@ -69,7 +66,7 @@ class BuissenssFragment : MviFragment<MainView, MainPresenter>(),
             .map { "Business" }
     }
 
-    override fun checkLive(): Observable<String> {
+    override fun queryRoom(): Observable<String> {
         return Observable.just("Business")
     }
 
@@ -81,20 +78,17 @@ class BuissenssFragment : MviFragment<MainView, MainPresenter>(),
             viewState.isPageLoading -> {
                 swipeLayout.isRefreshing = true
             }
-
             viewState.newsObject != null -> {
                 swipeLayout.isRefreshing = false
                 inflateData(viewState.newsObject)
             }
-
             viewState.error -> {
                 swipeLayout.isRefreshing = false
             }
-
         }
     }
 
     private fun inflateData(newsObject: NewsResponseModel?) {
-        newsObject?.let { adapter.bindData(it) }
+        newsObject?.let { recyclerAdapter.bindData(it) }
     }
 }

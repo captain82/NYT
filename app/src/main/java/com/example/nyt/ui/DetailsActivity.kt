@@ -49,14 +49,10 @@ class DetailsActivity : AppCompatActivity() {
         abstractTextView.text = abstract
         linkTextView.text = "Link : ${link}"
         authorTextView.text = author
-
         toolbarTitle.text = section
 
         iconBack.setOnClickListener {
             onBackPressed()
         }
-
-
-
     }
 }

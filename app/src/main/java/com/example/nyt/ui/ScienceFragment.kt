@@ -24,12 +24,10 @@ import kotlinx.android.synthetic.main.fragment_tech.*
 /**
  * A simple [Fragment] subclass.
  */
-class ScienceFragment : MviFragment<MainView, MainPresenter>(),
-    MainView {
+class ScienceFragment : MviFragment<MainView, MainPresenter>(), MainView {
     private val localdb by lazy { AppDatabase.getDatabase(context!!) }
     private lateinit var presenter: MainPresenter
-    private lateinit var adapter: NewsRecyclerAdapter
-
+    private lateinit var recyclerAdapter: NewsRecyclerAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,7 +40,7 @@ class ScienceFragment : MviFragment<MainView, MainPresenter>(),
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        adapter = NewsRecyclerAdapter {
+        recyclerAdapter = NewsRecyclerAdapter {
             val intent = Intent(activity, DetailsActivity::class.java)
             intent.putExtra("IMAGE_URL", it.multimedia?.get(0)?.imageUrl)
             intent.putExtra("TITLE", it.title)
@@ -54,7 +52,7 @@ class ScienceFragment : MviFragment<MainView, MainPresenter>(),
             startActivity(intent)
         }
 
-        recyclerView.adapter = adapter
+        recyclerView.adapter = recyclerAdapter
         recyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
     }
 
@@ -63,7 +61,7 @@ class ScienceFragment : MviFragment<MainView, MainPresenter>(),
         return presenter
     }
 
-    override fun checkLive(): Observable<String> {
+    override fun queryRoom(): Observable<String> {
         return Observable.just("Science")
     }
 
@@ -80,12 +78,10 @@ class ScienceFragment : MviFragment<MainView, MainPresenter>(),
             viewState.isPageLoading -> {
                 swipeLayout.isRefreshing = true
             }
-
             viewState.newsObject != null -> {
                 swipeLayout.isRefreshing = false
                 inflateData(viewState.newsObject)
             }
-
             viewState.error -> {
                 swipeLayout.isRefreshing = false
             }
@@ -93,7 +89,6 @@ class ScienceFragment : MviFragment<MainView, MainPresenter>(),
     }
 
     private fun inflateData(newsObject: NewsResponseModel?) {
-        newsObject?.let { adapter.bindData(it) }
+        newsObject?.let { recyclerAdapter.bindData(it) }
     }
-
 }
