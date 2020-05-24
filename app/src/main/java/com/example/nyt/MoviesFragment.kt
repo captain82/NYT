@@ -17,6 +17,7 @@ import com.example.nyt.model.NewsResponseModel
 import com.example.nyt.mvi.DetailsActivity
 import com.example.nyt.mvi.MainViewState
 import com.hannesdorfmann.mosby3.mvi.MviFragment
+import com.jakewharton.rxbinding2.support.v4.widget.RxSwipeRefreshLayout
 import com.jakewharton.rxbinding2.view.RxView
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Section
@@ -29,8 +30,8 @@ import kotlinx.android.synthetic.main.fragment_tech.*
  */
 class MoviesFragment :  MviFragment<MainView, MainPresenter>(), MainView{
 
-    private val section = Section()
-    private val groupAdpater = GroupAdapter<ViewHolder>()
+    private lateinit var adapter: NewsRecyclerAdapter
+
     private val localdb by lazy { AppDatabase.getDatabase(context!!) }
     private lateinit var presenter: MainPresenter
 
@@ -44,9 +45,20 @@ class MoviesFragment :  MviFragment<MainView, MainPresenter>(), MainView{
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        recyclerView.adapter = groupAdpater
-        groupAdpater.add(section)
 
+        adapter = NewsRecyclerAdapter {
+            val intent = Intent(activity, DetailsActivity::class.java)
+            intent.putExtra("IMAGE_URL", it.multimedia?.get(0)?.imageUrl)
+            intent.putExtra("TITLE", it.title)
+            intent.putExtra("DATE", it.publishDate)
+            intent.putExtra("ABSTRACT", it.abstract)
+            intent.putExtra("LINK", it.webUrl)
+            intent.putExtra("AUTHOR", it.author)
+            intent.putExtra("SECTION", "Technology")
+            startActivity(intent)
+        }
+
+        recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
     }
 
@@ -55,55 +67,39 @@ class MoviesFragment :  MviFragment<MainView, MainPresenter>(), MainView{
         return presenter
     }
 
-    override fun queryRoom(): Observable<String> {
-        return Observable.just("Movies")
-    }
-
-    override fun updatedb(): Observable<String> {
-        return RxView.clicks(button).map { "Movies" }
-
-    }
-
     override fun checkLive(): Observable<String> {
         return Observable.just("Movies")
     }
 
+    override fun refreshData(): Observable<String> {
+        return RxSwipeRefreshLayout.refreshes(swipeLayout)
+            .map { "Movies" }    }
+
     override fun render(viewState: MainViewState) {
         when {
+            viewState.updateDb -> {
+                swipeLayout.isRefreshing = false
+            }
             viewState.isPageLoading -> {
-                //progressDialog.showDialog()
+                swipeLayout.isRefreshing = true
             }
 
             viewState.newsObject != null -> {
+                swipeLayout.isRefreshing = false
                 inflateData(viewState.newsObject)
-                ////progressDialog.dismissDialog()
             }
 
             viewState.error -> {
-                //progressDialog.dismissDialog()
-
+                swipeLayout.isRefreshing = false
             }
+
         }
     }
 
     private fun inflateData(newsObject: NewsResponseModel?) {
 
-        if (section.itemCount == 0) {
-           /* newsObject?.results?.forEach { newsItem ->
-                section.add(NewsItem(newsItem) {
-                    val intent = Intent(activity, DetailsActivity::class.java)
-                    intent.putExtra("IMAGE_URL", newsItem.multimedia?.get(0)?.imageUrl)
-                    intent.putExtra("TITLE", newsItem.title)
-                    intent.putExtra("DATE", newsItem.publishDate)
-                    intent.putExtra("ABSTRACT", newsItem.abstract)
-                    intent.putExtra("LINK", newsItem.webUrl)
-                    intent.putExtra("AUTHOR", newsItem.author)
-                    intent.putExtra("SECTION",newsObject.section)
+        newsObject?.let { adapter.bindData(it) }
 
-                    startActivity(intent)
-                })
-            }*/
-        }
     }
 
 

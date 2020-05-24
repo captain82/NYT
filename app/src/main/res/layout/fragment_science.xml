@@ -5,17 +5,19 @@
     android:layout_height="match_parent"
     tools:context=".ScienceFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:clickable="true"
-        android:focusable="true"
-        android:paddingBottom="16dp"
-        android:clipToPadding="false"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
-    <Button
-        android:id="@+id/button"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeLayout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:clipToPadding="false"
+            android:focusable="true"
+            android:paddingBottom="16dp" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </FrameLayout>

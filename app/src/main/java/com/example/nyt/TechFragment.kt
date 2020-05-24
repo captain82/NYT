@@ -15,46 +15,33 @@ import com.example.nyt.model.NewsResponseModel
 import com.example.nyt.mvi.DetailsActivity
 import com.example.nyt.mvi.MainViewState
 import com.hannesdorfmann.mosby3.mvi.MviFragment
-import com.jakewharton.rxbinding2.view.RxView
-import com.xwray.groupie.GroupAdapter
+import com.jakewharton.rxbinding2.support.v4.widget.RxSwipeRefreshLayout
 import com.xwray.groupie.Section
-import com.xwray.groupie.ViewHolder
 import io.reactivex.Observable
+
 import kotlinx.android.synthetic.main.fragment_tech.*
 
 /**
  * A simple [Fragment] subclass.
  */
 class TechFragment : MviFragment<MainView, MainPresenter>(), MainView {
-    private val section = Section()
-    private val groupAdpater = GroupAdapter<ViewHolder>()
     private val localdb by lazy { AppDatabase.getDatabase(context!!) }
     private lateinit var presenter: MainPresenter
+    private lateinit var adapter: NewsRecyclerAdapter
 
-    private lateinit var progressDialog: ProgressDialog
-    private var shouldFetch: Boolean = false
-
-    lateinit var newsItem: NewsItem
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        groupAdpater.add(section)
         return inflater.inflate(R.layout.fragment_tech, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        //progressDialog = ProgressDialog(context!!, "Loading...")
-
-        swipeLayout.setOnRefreshListener {
-            presenter.fetchData("Technology")
-        }
-
-        newsItem = NewsItem {
+        adapter = NewsRecyclerAdapter {
             val intent = Intent(activity, DetailsActivity::class.java)
             intent.putExtra("IMAGE_URL", it.multimedia?.get(0)?.imageUrl)
             intent.putExtra("TITLE", it.title)
@@ -63,13 +50,10 @@ class TechFragment : MviFragment<MainView, MainPresenter>(), MainView {
             intent.putExtra("LINK", it.webUrl)
             intent.putExtra("AUTHOR", it.author)
             intent.putExtra("SECTION", "Technology")
-
             startActivity(intent)
         }
 
-
-        recyclerView.adapter = groupAdpater
-        recyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        recyclerView.adapter = adapter
 
     }
 
@@ -78,15 +62,9 @@ class TechFragment : MviFragment<MainView, MainPresenter>(), MainView {
         return presenter
     }
 
-    override fun queryRoom(): Observable<String> {
-        swipeLayout.isRefreshing = true
-
-        return Observable.just("Technology")
-        //return Observable.just("Technology")
-    }
-
-    override fun updatedb(): Observable<String> {
-        return Observable.just("Technology")
+    override fun refreshData(): Observable<String> {
+        return RxSwipeRefreshLayout.refreshes(swipeLayout)
+            .map { "Technology" }
     }
 
     override fun checkLive(): Observable<String> {
@@ -96,42 +74,25 @@ class TechFragment : MviFragment<MainView, MainPresenter>(), MainView {
     override fun render(viewState: MainViewState) {
         when {
             viewState.updateDb -> {
-                Log.i("UPDATE", "DB")
+                swipeLayout.isRefreshing = false
             }
             viewState.isPageLoading -> {
-                //progressDialog.showDialog()
+                swipeLayout.isRefreshing = true
             }
 
             viewState.newsObject != null -> {
                 swipeLayout.isRefreshing = false
                 inflateData(viewState.newsObject)
-                ////progressDialog.dismissDialog()
             }
 
             viewState.error -> {
-                //progressDialog.dismissDialog()
-
+                swipeLayout.isRefreshing = false
             }
-
         }
     }
-
 
     private fun inflateData(newsObject: NewsResponseModel?) {
-        Log.i("count", section.itemCount.toString())
-
-        if (section.itemCount == 0) {
-            newsObject?.results?.forEach { newsItem ->
-                section.add(this.newsItem)
-                this.newsItem.bindData(newsItem)
-                this.newsItem.notifyChanged()
-
-            }
-        } else {
-            newsObject?.results?.forEach {
-                this.newsItem.bindData(it)
-                this.newsItem.notifyChanged()
-            }
-        }
+        newsObject?.let { adapter.bindData(it) }
     }
+
 }

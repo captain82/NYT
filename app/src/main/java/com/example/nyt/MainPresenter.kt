@@ -17,31 +17,13 @@ import io.reactivex.schedulers.Schedulers
 class MainPresenter(private var localdb: AppDatabase) :
     MviBasePresenter<MainView, MainViewState>() {
 
-    lateinit var section:String
+    lateinit var section: String
+
+    val defaultResponseModel = NewsResponseModel("FAILED" , "", listOf())
 
     override fun bindIntents() {
 
-       /* val updateDb = intent(MainView::updatedb)
-            .switchMap {
-                Log.i("update", it)
-                RetrofitBuilder.apiService
-                    .getTopNewsByCategory(it, "IUlVCCal6Hvyto3wwp1nKjfIzWtizl4q")
-                    .doOnError { Log.i("Purge", it.localizedMessage) }
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
-            }
-            .map {
-                inflateDataInRoom(it)
-                Log.i("purge", it.toString())
-                NewsActionState.LoadingState as NewsActionState
-            }
-            .onErrorReturn {
-                Log.i("Purge", it.localizedMessage)
-                NewsActionState.ErrorState(it)
-            }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-*/
+
 
         val checkLive = intent(MainView::checkLive)
             .switchMap { section ->
@@ -67,38 +49,40 @@ class MainPresenter(private var localdb: AppDatabase) :
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
 
-        /* val getRoomQuery = intent(MainView::queryRoom)
-             .switchMap {
-                 Log.i("Switch", "fired")
-                 localdb.responseDao().queryObservable(it)
-                     .observeOn(AndroidSchedulers.mainThread())
-                     .subscribeOn(Schedulers.io())
-                     .toObservable()
-                     .doOnError { Log.i("ErrorRoom", it.localizedMessage) }
-                     .onErrorResumeNext(
-                         RetrofitBuilder.apiService.getTopNewsByCategory(
-                             it,
-                             "IUlVCCal6Hvyto3wwp1nKjfIzWtizl4q"
-                         ).observeOn(AndroidSchedulers.mainThread())
-                             .subscribeOn(Schedulers.io())
-                     )
-             }.map {
-                 //inflateDataInRoom(it)
-                 NewsActionState.DataState(it) as NewsActionState
-             }.onErrorReturn {
-                 Log.i("Error", it.localizedMessage)
 
-                 NewsActionState.ErrorState(it)
-             }
-             .observeOn(AndroidSchedulers.mainThread())
-             .subscribeOn(Schedulers.io())*/
+        val refreshData = intent(MainView::refreshData)
+            .flatMap {
+                RetrofitBuilder.apiService
+                    .getTopNewsByCategory(it, "IUlVCCal6Hvyto3wwp1nKjfIzWtizl4q")
+                    .onErrorReturn {
+                        defaultResponseModel
+                    }
+                    .doOnError { Log.i("error", "occured") }
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+            }
+            .map {
+                Log.i("refresh", "success")
+                if (it.status=="OK"){
+                    inflateDataInRoom(it)
+                    NewsActionState.UpdateDb as NewsActionState
+                }else{
+                    NewsActionState.ErrorState(Throwable(Exception().localizedMessage))
+                }
 
+            }
+            .onErrorReturn { t ->
+                Log.i("refresh", t.localizedMessage)
+                NewsActionState.ErrorState(t)
+            }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
 
-       // val finalObservable = Observable.merge(updateDb, checkLive)
+        val finalObservable = Observable.merge(refreshData, checkLive)
 
         val initialState = MainViewState(isPageLoading = true)
 
-        checkLive.scan(initialState, this::viewStateReducer)?.let {
+        finalObservable.scan(initialState, this::viewStateReducer)?.let {
             subscribeViewState(it, MainView::render)
         }
     }
@@ -109,7 +93,9 @@ class MainPresenter(private var localdb: AppDatabase) :
             .doOnError { Log.i("error", "occured") }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe({inflateDataInRoom(it)},{Log.i("Error" , "host")})
+            .subscribe({
+                inflateDataInRoom(it)
+            }, { Log.i("Error", "host") })
     }
 
     private fun inflateDataInRoom(response: NewsResponseModel) {
@@ -130,7 +116,11 @@ class MainPresenter(private var localdb: AppDatabase) :
                 previousState.copy(isPageLoading = true)
             }
             is NewsActionState.DataState -> {
-                previousState.copy(isPageLoading = false, updateDb = false,newsObject = currentState.newsResponse)
+                previousState.copy(
+                    isPageLoading = false,
+                    updateDb = false,
+                    newsObject = currentState.newsResponse
+                )
             }
             is NewsActionState.ErrorState -> previousState.copy(
                 error = true

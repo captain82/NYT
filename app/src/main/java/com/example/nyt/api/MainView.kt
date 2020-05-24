@@ -13,10 +13,8 @@ interface MainView:MvpView {
 
     fun render(viewState: MainViewState)
 
-    fun queryRoom(): Observable<String>
-
-    fun updatedb():Observable<String>
-
     fun checkLive():Observable<String>
+
+    fun refreshData():Observable<String>
 
 }

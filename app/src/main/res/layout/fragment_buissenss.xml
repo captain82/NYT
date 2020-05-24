@@ -5,6 +5,11 @@
     android:layout_height="match_parent"
     tools:context=".BuissenssFragment">
 
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:clickable="true"
@@ -13,10 +18,6 @@
         android:clipToPadding="false"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </FrameLayout>
